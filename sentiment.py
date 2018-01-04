@@ -7,8 +7,8 @@ from textblob import TextBlob
 java_path = "C:/Program Files/Java/jdk1.8.0_111/bin/java.exe"
 os.environ['JAVAHOME'] = java_path
 
-path_to_jar = 'D:/Sentdex/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0.jar'
-path_to_models_jar = 'D:/Sentdex/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0-models.jar'
+path_to_jar = 'D:/Python Codes/Sentdex/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0.jar'
+path_to_models_jar = 'D:/Python Codes/Sentdex/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0-models.jar'
 dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
 is_noun = lambda pos: pos[:2] == 'NN'
 
@@ -28,13 +28,13 @@ sent = ""
 for w in tokenized:
     sent += " " + w
 
-    
+
 idx_list = []
 current_index = 0
 for word in tokenized:
     idx_list.append(str(current_index))
     current_index += 1
-    
+
 #noun index
 nouns = []
 noun_idx = []
@@ -54,18 +54,18 @@ for entry in dep_dot:
     if entry.find('->') > 0:
         index_relation = entry.split(' ')[:3]
         edges.append((index_relation[0], index_relation[2]))
-        
+
 is_present = {}
 for tupl in edges:
     for i in tupl:
         is_present[i] = 1
-        
+
 graph = nx.Graph(edges)
 
 clusters = {}
 for i in noun_idx:
     clusters[i] = []
- 
+
 idx_list = [w for w in idx_list if w in is_present]
 noun_idx = [w for w in noun_idx if w in is_present]
 for word in idx_list:
@@ -77,7 +77,7 @@ for word in idx_list:
             min_dist = d
             k = target
     clusters[k].append(word)
-    
+
 theta = 3
 for c1 in noun_idx:
     for c2 in noun_idx:
@@ -86,8 +86,8 @@ for c1 in noun_idx:
             if d < theta:
                 clusters[c1] += clusters[c2]
                 clusters[c2] = []
-                
-            
+
+
 for key, value in clusters.items():
     sentence = ""
     if len(value) > 0 :
